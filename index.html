@@ -3,37 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>威士忌洞穴 · 私人休闲区 3.62m×1.82m</title>
+<title>私人书房 · 威士忌角落 3.62m×1.82m</title>
 <style>
   * { margin: 0; padding: 0; }
-  body { background: #0a0a0a; overflow: hidden; font-family: 'PingFang SC',sans-serif; }
+  body { background: #0d0b09; overflow: hidden; font-family: 'PingFang SC',sans-serif; }
   canvas { display: block; }
   #ui {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: rgba(20,15,10,0.9); color: #c8a96e; padding: 14px 28px;
-    border: 1px solid #5a3e28; border-radius: 40px; font-size: 14px;
-    letter-spacing: 3px; pointer-events: none; z-index: 10;
+    background: rgba(15,12,8,0.92); color: #b8a88a; padding: 12px 24px;
+    border: 1px solid #4a3a28; border-radius: 30px; font-size: 13px;
+    letter-spacing: 2px; pointer-events: none; z-index: 10;
   }
   #info {
-    position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
-    color: #c8a96e; font-size: 13px; letter-spacing: 2px;
-    opacity: 0.7; pointer-events: none; z-index: 10;
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    color: #9a8a7a; font-size: 12px; letter-spacing: 3px;
+    opacity: 0.6; pointer-events: none; z-index: 10;
   }
   #legend {
-    position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
-    color: #8b7355; font-size: 11px; line-height: 2;
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    color: #7a6a5a; font-size: 10px; line-height: 2.2;
     pointer-events: none; z-index: 10;
   }
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
 </style>
 </head>
 <body>
-<div id="info">🥃 WHISKY CAVE · 威士忌洞穴</div>
+<div id="info">🥃 私人书房 · 威士忌角落</div>
 <div id="legend">
-  <div><span class="dot" style="background:#c8a96e"></span>琥珀灯光</div>
-  <div><span class="dot" style="background:#3d2b1f"></span>深胡桃木</div>
-  <div><span class="dot" style="background:#2a1f14"></span>洞石墙面</div>
-  <div><span class="dot" style="background:#4a3728"></span>真皮沙发</div>
+  <div><span class="dot" style="background:#c8a96e"></span>暖光照明</div>
+  <div><span class="dot" style="background:#3d2b1f"></span>胡桃木</div>
+  <div><span class="dot" style="background:#5a4a3a"></span>微水泥墙面</div>
+  <div><span class="dot" style="background:#2a3a2a"></span>窗外绿意</div>
+  <div><span class="dot" style="background:#3a2a1a"></span>皮质家具</div>
 </div>
 <div id="ui">🖱 拖拽旋转 &nbsp;|&nbsp; 滚轮缩放 &nbsp;|&nbsp; 右键平移 &nbsp;|&nbsp; 3.62m × 1.82m</div>
 
@@ -52,13 +53,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ============ 场景 ============
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a0806, 0.0008);
+scene.fog = new THREE.FogExp2(0x0a0806, 0.0006);
 scene.background = new THREE.Color(0x0a0806);
 
 const W = 3.62, D = 1.82, H = 2.60;
 
 // ============ 相机 ============
-const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 20);
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 20);
 camera.position.set(5, 2.2, 4);
 camera.lookAt(W/2, H/2, D/2);
 
@@ -74,350 +75,416 @@ document.body.appendChild(renderer.domElement);
 // ============ 控制器 ============
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(W/2, 1.1, D/2);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
+controls.enableDamping = true; controls.dampingFactor = 0.08;
 controls.minDistance = 1.5; controls.maxDistance = 10;
 controls.maxPolarAngle = Math.PI * 0.58;
 controls.update();
 
-// ============ 灯光 ============
-// 环境光 — 极暗的暖色
-const ambient = new THREE.AmbientLight(0x3a2510, 0.5);
-scene.add(ambient);
+// ============ 材质预设 ============
+const matWalnut = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.4, metalness: 0.05 });
+const matDarkWood = new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.45, metalness: 0.08 });
+const matFloor = new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 0.5, metalness: 0.05 });
+const matWall = new THREE.MeshStandardMaterial({ color: 0x5a4a3a, roughness: 0.75, metalness: 0 });
+const matCeiling = new THREE.MeshStandardMaterial({ color: 0x1c130a, roughness: 0.85, metalness: 0 });
+const matLeather = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.5, metalness: 0.05 });
+const matBrass = new THREE.MeshStandardMaterial({ color: 0xa08050, roughness: 0.25, metalness: 0.85 });
+const matDeskTop = new THREE.MeshStandardMaterial({ color: 0x332218, roughness: 0.3, metalness: 0.1 });
+const matGlass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.35, clearcoat: 0.4 });
+const matMetal = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.3, metalness: 0.7 });
 
-// 主吊灯 — 黄铜吊灯，暖琥珀光
-const chandelier = new THREE.PointLight(0xff9930, 60, 5, 0.5);
-chandelier.position.set(W/2, 2.45, D/2);
-chandelier.castShadow = true;
-chandelier.shadow.mapSize.set(1024, 1024);
-chandelier.shadow.camera.near = 0.1;
-chandelier.shadow.camera.far = 10;
-scene.add(chandelier);
-
-// 吊灯灯泡
-const bulbGeo = new THREE.SphereGeometry(0.06, 16, 16);
-const bulbMat = new THREE.MeshBasicMaterial({ color: 0xffcc66 });
-const bulb = new THREE.Mesh(bulbGeo, bulbMat);
-bulb.position.copy(chandelier.position);
-scene.add(bulb);
-
-// 吧台上方射灯
-const spotBar = new THREE.SpotLight(0xffbb77, 30, 4, Math.PI/5, 0.3, 0.4);
-spotBar.position.set(0.8, 2.35, 0.5);
-spotBar.target.position.set(0.5, 1.0, 0.6);
-spotBar.castShadow = true;
-scene.add(spotBar);
-scene.add(spotBar.target);
-
-// 沙发旁落地灯
-const floorLamp = new THREE.PointLight(0xffaa55, 15, 2.5, 0.6);
-floorLamp.position.set(2.4, 1.7, D - 0.3);
-floorLamp.castShadow = true;
-scene.add(floorLamp);
-
-// 墙面洗墙灯带（暖色）
-const wallWashTop = new THREE.PointLight(0xffbb88, 8, 3, 1);
-wallWashTop.position.set(W/2, H - 0.15, 0.05);
-scene.add(wallWashTop);
-
-// ============ 房间结构 ============
-const wallMat = new THREE.MeshStandardMaterial({ color: 0x2a1f14, roughness: 0.85, metalness: 0.05 });
-const floorMat = new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 0.55, metalness: 0.1 });
-const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x1c130a, roughness: 0.9, metalness: 0 });
-
-// 地板
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), floorMat);
-floor.rotation.x = -Math.PI / 2;
-floor.position.set(W/2, 0, D/2);
+// ============ 地板 ============
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), matFloor);
+floor.rotation.x = -Math.PI / 2; floor.position.set(W/2, 0, D/2);
 floor.receiveShadow = true;
 scene.add(floor);
 
-// 地毯 — 波斯纹样
-const rugGeo = new THREE.PlaneGeometry(2.0, 1.2);
-const rugMat = new THREE.MeshStandardMaterial({ color: 0x5c1a1a, roughness: 1, metalness: 0 });
-const rug = new THREE.Mesh(rugGeo, rugMat);
-rug.rotation.x = -Math.PI / 2;
-rug.position.set(2.0, 0.003, D/2);
+// 地毯 — 书桌区
+const rug = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 1.0), new THREE.MeshStandardMaterial({ color: 0x3a2820, roughness: 1 }));
+rug.rotation.x = -Math.PI / 2; rug.position.set(2.5, 0.003, D/2);
 rug.receiveShadow = true;
 scene.add(rug);
 
-// 后墙 (长边，靠走廊)
-const backWall = new THREE.Mesh(new THREE.PlaneGeometry(W, H), wallMat);
-backWall.position.set(W/2, H/2, D);
-backWall.receiveShadow = true;
-scene.add(backWall);
+// ============ 天花板 ============
+const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(W, D), matCeiling);
+ceiling.rotation.x = Math.PI / 2; ceiling.position.set(W/2, H, D/2);
+scene.add(ceiling);
 
-// 两侧短墙
-const sideWallMat = new THREE.MeshStandardMaterial({ color: 0x241810, roughness: 0.8, metalness: 0.05 });
-const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(D, H), sideWallMat);
-leftWall.rotation.y = Math.PI / 2;
-leftWall.position.set(0, H/2, D/2);
-leftWall.receiveShadow = true;
-scene.add(leftWall);
-
-const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(D, H), sideWallMat);
-rightWall.rotation.y = -Math.PI / 2;
-rightWall.position.set(W, H/2, D/2);
-rightWall.receiveShadow = true;
-scene.add(rightWall);
-
-// 洞石装饰板 — 左侧短墙 (入墙酒架)
-const stonePanel = new THREE.Mesh(
-  new THREE.PlaneGeometry(D - 0.1, H - 0.4),
-  new THREE.MeshStandardMaterial({ color: 0x3a2a1c, roughness: 0.7, metalness: 0.05 })
-);
-stonePanel.rotation.y = Math.PI / 2;
-stonePanel.position.set(0.05, H/2, D/2);
-stonePanel.receiveShadow = true;
-scene.add(stonePanel);
-
-// ============ 入墙酒架（左侧短墙）============
-function createWhiskyShelf(x, y, z, ry) {
-  const group = new THREE.Group();
-  const wood = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.4, metalness: 0.1 });
-  const bottleGreen = new THREE.MeshStandardMaterial({ color: 0x1a3a1a, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.8 });
-  const bottleBrown = new THREE.MeshStandardMaterial({ color: 0x5c3317, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.8 });
-
-  // 隔板
-  const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.03, 0.25), wood);
-  shelf.position.set(0, y - x, 0);
-  shelf.castShadow = true; shelf.receiveShadow = true;
-  group.add(shelf);
-
-  // 酒瓶
-  for (let i = 0; i < 4; i++) {
-    const mat = i % 2 === 0 ? bottleGreen : bottleBrown;
-    const bottle = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.18, 12), mat);
-    bottle.position.set(-0.25 + i * 0.16, y - x + 0.1, 0);
-    bottle.castShadow = true;
-    group.add(bottle);
-  }
-
-  // 威士忌醒酒器
-  const decanter = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), new THREE.MeshPhysicalMaterial({ color: 0x8B6914, roughness: 0.1, metalness: 0, transparent: true, opacity: 0.7, clearcoat: 0.3 }));
-  body.position.y = 0.04;
-  decanter.add(body);
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.08, 12), new THREE.MeshStandardMaterial({ color: 0x8B6914, roughness: 0.1, metalness: 0 }));
-  neck.position.y = 0.1;
-  decanter.add(neck);
-  decanter.position.set(-0.28, y - x + 0.12, 0.12);
-  group.add(decanter);
-
-  // 酒杯
-  const glass = new THREE.Group();
-  const bowl = new THREE.Mesh(new THREE.SphereGeometry(0.025, 12, 8, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.4, clearcoat: 0.5 }));
-  bowl.position.y = 0.06; bowl.rotation.x = Math.PI;
-  glass.add(bowl);
-  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.06, 8), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.5 }));
-  glass.add(stem);
-  glass.position.set(0.28, y - x + 0.1, 0.12);
-  group.add(glass);
-
-  group.position.set(x, 0, z);
-  group.rotation.y = ry;
-  return group;
-}
-
-// 墙面酒架
-for (let row = 0; row < 3; row++) {
-  const shelf = createWhiskyShelf(0.08, 1.2 + row * 0.35, 0.6, Math.PI / 2);
-  scene.add(shelf);
-}
-
-// ============ 吧台柜（左前角）============
-const barGroup = new THREE.Group();
-const darkWood = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.35, metalness: 0.1 });
-const barTop = new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.3, metalness: 0.15 });
-
-// 柜体
-const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.05, 0.5), darkWood);
-cabinet.position.set(0.35, 0.525, 0.45);
-cabinet.castShadow = true; cabinet.receiveShadow = true;
-barGroup.add(cabinet);
-
-// 台面 — 深色石材
-const top = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.04, 0.55), barTop);
-top.position.set(0.35, 1.07, 0.45);
-top.castShadow = true; top.receiveShadow = true;
-barGroup.add(top);
-
-// 台面酒瓶+酒杯
-const barBottle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.22, 12), new THREE.MeshPhysicalMaterial({ color: 0x8B6914, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.8, clearcoat: 0.3 }));
-barBottle.position.set(0.15, 1.2, 0.45);
-barBottle.castShadow = true;
-barGroup.add(barBottle);
-
-const barGlass1 = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.02, 0.1, 12), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.4 }));
-barGlass1.position.set(0.28, 1.13, 0.52);
-barGroup.add(barGlass1);
-
-const barGlass2 = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.02, 0.1, 12), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.4 }));
-barGlass2.position.set(0.28, 1.13, 0.38);
-barGroup.add(barGlass2);
-
-// 冰桶
-const iceBucket = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.08, 16), new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.2, metalness: 0.8 }));
-iceBucket.position.set(0.48, 1.11, 0.45);
-iceBucket.castShadow = true;
-barGroup.add(iceBucket);
-
-scene.add(barGroup);
-
-// ============ 切斯特菲尔德单人沙发 ============
-const chairGroup = new THREE.Group();
-const leatherMat = new THREE.MeshStandardMaterial({ color: 0x4a2a1a, roughness: 0.45, metalness: 0.05 });
-
-// 座垫
-const seat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.15, 0.7), leatherMat);
-seat.position.y = 0.4;
-seat.castShadow = true; seat.receiveShadow = true;
-chairGroup.add(seat);
-
-// 靠背
-const back = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.55, 0.12), leatherMat);
-back.position.set(0, 0.6, -0.29);
-back.castShadow = true;
-chairGroup.add(back);
-
-// 左扶手
-const armL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, 0.7), leatherMat);
-armL.position.set(-0.3, 0.45, 0);
-armL.castShadow = true;
-chairGroup.add(armL);
-
-// 右扶手
-const armR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, 0.7), leatherMat);
-armR.position.set(0.3, 0.45, 0);
-armR.castShadow = true;
-chairGroup.add(armR);
-
-// 铆钉装饰
-const studMat = new THREE.MeshStandardMaterial({ color: 0xb8960c, roughness: 0.3, metalness: 0.9 });
-for (let i = 0; i < 6; i++) {
-  const stud = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 8), studMat);
-  stud.position.set(-0.28 + i * 0.11, 0.52 + (i % 2) * 0.08, -0.28);
-  chairGroup.add(stud);
-}
-
-chairGroup.position.set(2.2, 0, 1.0);
-chairGroup.rotation.y = -0.3;
-scene.add(chairGroup);
-
-// ============ 脚凳 ============
-const ottoman = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.25, 0.45), leatherMat);
-ottoman.position.set(2.75, 0.125, 1.25);
-ottoman.rotation.y = 0.4;
-ottoman.castShadow = true; ottoman.receiveShadow = true;
-scene.add(ottoman);
-
-// ============ 小边几 ============
-const sideTable = new THREE.Group();
-const tableTop = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 24), new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.3, metalness: 0.15 }));
-tableTop.position.y = 0.52;
-tableTop.castShadow = true; tableTop.receiveShadow = true;
-sideTable.add(tableTop);
-
-const tableLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.5, 12), new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 0.2, metalness: 0.6 }));
-tableLeg.position.y = 0.25;
-tableLeg.castShadow = true;
-sideTable.add(tableLeg);
-
-// 边几上的酒杯
-const sideGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.02, 0.1, 12), new THREE.MeshPhysicalMaterial({ color: 0xffcc88, roughness: 0, metalness: 0, transparent: true, opacity: 0.35 }));
-sideGlass.position.y = 0.6;
-sideTable.add(sideGlass);
-
-sideTable.position.set(1.7, 0, 1.3);
-scene.add(sideTable);
-
-// ============ 书架 ============
-const bookShelf = new THREE.Group();
-const shelfWood = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.4, metalness: 0.1 });
-const bookColors = [0x5c1a1a, 0x1a3a1a, 0x332244, 0x8B6914, 0x2a2a3a, 0x4a2a1a, 0x1a2a3a, 0x5a3a1a];
-
-for (let row = 0; row < 4; row++) {
-  const sh = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.18), shelfWood);
-  sh.position.set(0, 0.2 + row * 0.35, 0);
-  sh.castShadow = true; sh.receiveShadow = true;
-  bookShelf.add(sh);
-
-  // 书本
-  for (let b = 0; b < 5; b++) {
-    const book = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.25 + Math.random() * 0.08, 0.14), new THREE.MeshStandardMaterial({ color: bookColors[(row+b)%8], roughness: 0.7 }));
-    book.position.set(-0.12 + b * 0.06, 0.35 + row * 0.35, 0);
-    book.castShadow = true;
-    bookShelf.add(book);
-  }
-}
-bookShelf.position.set(W - 0.08, 0, 1.15);
-bookShelf.rotation.y = -Math.PI / 2;
-scene.add(bookShelf);
-
-// ============ 装饰画 ============
-const painting = new THREE.Mesh(
-  new THREE.PlaneGeometry(0.6, 0.8),
-  new THREE.MeshStandardMaterial({ color: 0x5c3a1a, roughness: 0.6 })
-);
-painting.position.set(2.6, 1.7, D - 0.02);
-painting.receiveShadow = true;
-scene.add(painting);
-
-const frame = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.88, 0.02), new THREE.MeshStandardMaterial({ color: 0x8B6914, roughness: 0.2, metalness: 0.8 }));
-frame.position.copy(painting.position);
-frame.position.z -= 0.01;
-scene.add(frame);
-
-// ============ 天花板木梁 ============
+// 木梁
 for (let i = 0; i < 5; i++) {
-  const beam = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, D), new THREE.MeshStandardMaterial({ color: 0x2a1810, roughness: 0.5, metalness: 0.05 }));
-  beam.position.set(0.3 + i * 0.8, H - 0.04, D/2);
+  const beam = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.06, D), matDarkWood);
+  beam.position.set(0.3 + i * 0.78, H - 0.03, D/2);
   beam.castShadow = true;
   scene.add(beam);
 }
 
+// ============ 墙面（微水泥质感）============
+function addWall(x, y, z, w, h, ry) {
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(w, h), matWall);
+  wall.position.set(x, y, z);
+  wall.rotation.y = ry;
+  wall.receiveShadow = true;
+  return wall;
+}
+
+// 后长墙 (3.62m, Z=D)
+addWall(W/2, H/2, D, W, H, 0);
+
+// ============ 左短墙 + 推拉门 (1.2m) ============
+// 门框
+const doorW = 1.2, doorH = 2.1, doorY = 1.05;
+// 门上方的墙
+const wallAboveDoor = new THREE.Mesh(new THREE.PlaneGeometry(doorW, H - doorH), matWall);
+wallAboveDoor.rotation.y = Math.PI / 2;
+wallAboveDoor.position.set(0.01, doorH + (H - doorH)/2, D/2 - doorW/2 + 0.6);
+wallAboveDoor.receiveShadow = true;
+scene.add(wallAboveDoor);
+
+// 门右侧墙
+const wallRightDoor = new THREE.Mesh(new THREE.PlaneGeometry(D - doorW, H), matWall);
+wallRightDoor.rotation.y = Math.PI / 2;
+wallRightDoor.position.set(0.01, H/2, D - (D - doorW)/2 + 0.05);
+wallRightDoor.receiveShadow = true;
+scene.add(wallRightDoor);
+
+// 推拉门（玻璃+木框）
+const doorGroup = new THREE.Group();
+// 木框
+const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(0.04, doorH, 0.04), matWalnut);
+doorFrame.position.set(0, 0, 0);
+doorGroup.add(doorFrame);
+
+// 玻璃门扇
+const doorGlass = new THREE.Mesh(new THREE.PlaneGeometry(doorW - 0.1, doorH - 0.15), new THREE.MeshPhysicalMaterial({ color: 0x8899aa, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.3, clearcoat: 0.3 }));
+doorGlass.position.set(0, 0, 0.01);
+doorGroup.add(doorGlass);
+
+// 木横档
+for (let r = 0; r < 3; r++) {
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(doorW, 0.03, 0.04), matWalnut);
+  rail.position.set(0, -doorH/3 + r * doorH/3, 0);
+  doorGroup.add(rail);
+}
+
+// 黄铜拉手
+const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.25, 8), matBrass);
+handle.position.set(doorW/2 - 0.06, 0, 0.03);
+handle.rotation.x = Math.PI/2;
+doorGroup.add(handle);
+
+doorGroup.rotation.y = Math.PI / 2;
+doorGroup.position.set(0.03, doorY, D/2 - doorW/2 + 0.6);
+doorGroup.castShadow = true;
+scene.add(doorGroup);
+
+// ============ 右短墙 + 窗户 ============
+const winW = 1.0, winH = 1.2, winY = 1.5;
+
+// 窗下墙
+const wallBelowWin = new THREE.Mesh(new THREE.PlaneGeometry(winW, winY - winH/2), matWall);
+wallBelowWin.rotation.y = -Math.PI / 2;
+wallBelowWin.position.set(W - 0.01, (winY - winH/2)/2, D/2);
+wallBelowWin.receiveShadow = true;
+scene.add(wallBelowWin);
+
+// 窗上墙
+const wallAboveWin = new THREE.Mesh(new THREE.PlaneGeometry(winW, H - winY - winH/2), matWall);
+wallAboveWin.rotation.y = -Math.PI / 2;
+wallAboveWin.position.set(W - 0.01, winY + winH/2 + (H - winY - winH/2)/2, D/2);
+wallAboveWin.receiveShadow = true;
+scene.add(wallAboveWin);
+
+// 窗外自然光
+const windowLight = new THREE.DirectionalLight(0xbcd4e6, 3);
+windowLight.position.set(W - 0.5, winY, D/2);
+windowLight.target.position.set(W, winY, D/2);
+windowLight.castShadow = false;
+scene.add(windowLight);
+scene.add(windowLight.target);
+
+// 窗外绿意 — 简单树影
+const treePlane = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.0), new THREE.MeshStandardMaterial({ color: 0x2a4a2a, roughness: 0.8, side: THREE.DoubleSide }));
+treePlane.position.set(W + 0.3, winY, D/2);
+treePlane.rotation.y = -Math.PI / 2;
+scene.add(treePlane);
+
+// 窗框
+const winFrame = new THREE.Group();
+const frameW = new THREE.Mesh(new THREE.BoxGeometry(0.04, winH + 0.08, 0.06), matWalnut);
+frameW.position.set(0, 0, -winW/2 - 0.02);
+winFrame.add(frameW);
+const frameW2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, winH + 0.08, 0.06), matWalnut);
+frameW2.position.set(0, 0, winW/2 + 0.02);
+winFrame.add(frameW2);
+const frameH = new THREE.Mesh(new THREE.BoxGeometry(winW + 0.08, 0.04, 0.06), matWalnut);
+frameH.position.set(0, -winH/2 - 0.02, 0);
+winFrame.add(frameH);
+const frameH2 = new THREE.Mesh(new THREE.BoxGeometry(winW + 0.08, 0.04, 0.06), matWalnut);
+frameH2.position.set(0, winH/2 + 0.02, 0);
+winFrame.add(frameH2);
+// 横中挺
+const mullion = new THREE.Mesh(new THREE.BoxGeometry(winW + 0.08, 0.02, 0.04), matWalnut);
+mullion.position.set(0, 0, 0);
+winFrame.add(mullion);
+
+winFrame.rotation.y = -Math.PI / 2;
+winFrame.position.set(W - 0.02, winY, D/2);
+scene.add(winFrame);
+
+// 玻璃
+const winGlass = new THREE.Mesh(new THREE.PlaneGeometry(winW, winH), new THREE.MeshPhysicalMaterial({ color: 0xaabbcc, roughness: 0.05, metalness: 0.05, transparent: true, opacity: 0.2, clearcoat: 0.5 }));
+winGlass.rotation.y = -Math.PI / 2;
+winGlass.position.set(W - 0.015, winY, D/2);
+scene.add(winGlass);
+
+// 窗帘（简约深灰）
+const curtainL = new THREE.Mesh(new THREE.PlaneGeometry(0.45, winH + 0.3), new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.9, side: THREE.DoubleSide }));
+curtainL.rotation.y = -Math.PI / 2;
+curtainL.position.set(W - 0.03, winY, D/2 - winW/2 - 0.2);
+scene.add(curtainL);
+const curtainR = new THREE.Mesh(new THREE.PlaneGeometry(0.45, winH + 0.3), new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.9, side: THREE.DoubleSide }));
+curtainR.rotation.y = -Math.PI / 2;
+curtainR.position.set(W - 0.03, winY, D/2 + winW/2 + 0.2);
+scene.add(curtainR);
+
+// ============ 电脑桌（靠窗，享受自然光）============
+const deskGroup = new THREE.Group();
+
+// 桌面 — 胡桃木大板
+const deskTop = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.035, 0.6), matDeskTop);
+deskTop.position.y = 0.75;
+deskTop.castShadow = true; deskTop.receiveShadow = true;
+deskGroup.add(deskTop);
+
+// 桌腿 — 黑色金属方管
+for (let lx of [-0.55, 0.55]) {
+  for (let lz of [-0.22, 0.22]) {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.73, 8), matMetal);
+    leg.position.set(lx, 0.365, lz);
+    leg.castShadow = true;
+    deskGroup.add(leg);
+  }
+}
+
+// 显示器
+const monitorStand = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.08, 12), matMetal);
+monitorStand.position.set(0, 0.83, -0.05);
+deskGroup.add(monitorStand);
+
+const monitorScreen = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.35, 0.02), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.1, metalness: 0.2 }));
+monitorScreen.position.set(0, 1.06, -0.05);
+monitorScreen.castShadow = true;
+deskGroup.add(monitorScreen);
+
+// 屏幕发光（K线图暗示）
+const screenGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.31), new THREE.MeshBasicMaterial({ color: 0x1a3a2a }));
+screenGlow.position.set(0, 1.06, -0.035);
+deskGroup.add(screenGlow);
+
+// 键盘
+const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.012, 0.12), new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.5 }));
+keyboard.position.set(0, 0.77, 0.15);
+deskGroup.add(keyboard);
+
+// 鼠标
+const mouse = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 4, 0, Math.PI*2, 0, Math.PI/2), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.3 }));
+mouse.position.set(0.15, 0.775, 0.15);
+deskGroup.add(mouse);
+
+// 台灯
+const deskLamp = new THREE.Group();
+const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.04, 16), matBrass);
+deskLamp.add(lampBase);
+const lampArm = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.25, 8), matBrass);
+lampArm.position.y = 0.15;
+lampArm.rotation.x = 0.4;
+deskLamp.add(lampArm);
+const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.1, 16), new THREE.MeshStandardMaterial({ color: 0x3a3028, roughness: 0.6 }));
+lampShade.position.set(0.08, 0.24, 0);
+deskLamp.add(lampShade);
+deskLamp.position.set(0.5, 0.78, 0.2);
+deskGroup.add(deskLamp);
+
+const deskSpot = new THREE.PointLight(0xffcc99, 3, 1.5);
+deskSpot.position.set(0.5, 0.85, 0.13);
+deskGroup.add(deskSpot);
+
+// 咖啡杯
+const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.028, 0.07, 12), new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.4 }));
+mug.position.set(-0.4, 0.82, 0.1);
+deskGroup.add(mug);
+
+deskGroup.position.set(2.5, 0, 1.4);
+deskGroup.rotation.y = -0.15;
+scene.add(deskGroup);
+
+// ============ 办公椅 ============
+const chairGroup = new THREE.Group();
+const chairSeat = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.06, 20), matLeather);
+chairSeat.position.y = 0.45;
+chairSeat.castShadow = true;
+chairGroup.add(chairSeat);
+
+const chairBack = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.04), matLeather);
+chairBack.position.set(0, 0.65, -0.18);
+chairBack.castShadow = true;
+chairGroup.add(chairBack);
+
+// 椅腿 + 滚轮
+for (let a = 0; a < 5; a++) {
+  const angle = a * Math.PI * 2 / 5;
+  const r = 0.18;
+  const wheelLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.2, 8), matMetal);
+  wheelLeg.position.set(Math.cos(angle) * r, 0.35, Math.sin(angle) * r);
+  wheelLeg.rotation.z = Math.cos(angle) * 0.5;
+  wheelLeg.rotation.x = Math.sin(angle) * 0.5;
+  chairGroup.add(wheelLeg);
+  const wheel = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), matMetal);
+  wheel.position.set(Math.cos(angle) * r, 0.25, Math.sin(angle) * r);
+  chairGroup.add(wheel);
+}
+
+// 气压杆
+const gasLift = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.25, 12), matMetal);
+gasLift.position.y = 0.3;
+chairGroup.add(gasLift);
+
+chairGroup.position.set(2.5, 0, 0.85);
+scene.add(chairGroup);
+
+// ============ 休息区沙发（左侧，近门）============
+const loungeGroup = new THREE.Group();
+const sofaSeat = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.14, 0.65), matLeather);
+sofaSeat.position.y = 0.38;
+sofaSeat.castShadow = true; sofaSeat.receiveShadow = true;
+loungeGroup.add(sofaSeat);
+
+const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.5, 0.1), matLeather);
+sofaBack.position.set(0, 0.55, -0.27);
+sofaBack.castShadow = true;
+loungeGroup.add(sofaBack);
+
+for (let s of [-1, 1]) {
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.65), matLeather);
+  arm.position.set(s * 0.28, 0.42, 0);
+  arm.castShadow = true;
+  loungeGroup.add(arm);
+}
+
+loungeGroup.position.set(1.0, 0, 1.1);
+loungeGroup.rotation.y = 0.25;
+scene.add(loungeGroup);
+
+// 沙发旁落地灯
+const floorLampGroup = new THREE.Group();
+const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 1.5, 12), matBrass);
+lampPole.position.y = 0.75;
+floorLampGroup.add(lampPole);
+const lampShade2 = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.3, 20), new THREE.MeshStandardMaterial({ color: 0x3a3028, roughness: 0.5 }));
+lampShade2.position.y = 1.55;
+floorLampGroup.add(lampShade2);
+floorLampGroup.position.set(1.4, 0, 1.55);
+
+const floorLight = new THREE.PointLight(0xffbb77, 8, 2.5);
+floorLight.position.set(1.4, 1.5, 1.55);
+scene.add(floorLight);
+scene.add(floorLampGroup);
+
+// 沙发旁小边几
+const sideTable = new THREE.Group();
+const stTop = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.16, 0.03, 20), matDeskTop);
+stTop.position.y = 0.5; stTop.castShadow = true;
+sideTable.add(stTop);
+const stLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.48, 10), matMetal);
+stLeg.position.y = 0.24; stLeg.castShadow = true;
+sideTable.add(stLeg);
+sideTable.position.set(1.6, 0, 1.5);
+scene.add(sideTable);
+
+// 边几上的威士忌杯
+const whiskyGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.018, 0.08, 12), new THREE.MeshPhysicalMaterial({ color: 0xffcc88, roughness: 0, metalness: 0, transparent: true, opacity: 0.4 }));
+whiskyGlass.position.set(1.6, 0.57, 1.5);
+scene.add(whiskyGlass);
+
+// ============ 后墙酒架（沙发上方）============
+const shelfGroup = new THREE.Group();
+for (let row = 0; row < 2; row++) {
+  const sh = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.025, 0.2), matWalnut);
+  sh.position.set(0, 1.35 + row * 0.4, 0);
+  sh.castShadow = true;
+  shelfGroup.add(sh);
+
+  // 酒瓶
+  for (let b = 0; b < 3; b++) {
+    const bottle = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.16, 10), new THREE.MeshPhysicalMaterial({ color: b % 2 ? 0x8B6914 : 0x1a3a1a, roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.75 }));
+    bottle.position.set(-0.18 + b * 0.18, 1.5 + row * 0.4, 0);
+    bottle.castShadow = true;
+    shelfGroup.add(bottle);
+  }
+}
+shelfGroup.position.set(0.9, 0, D - 0.08);
+scene.add(shelfGroup);
+
+// ============ 天花板主灯 ============
+const mainLight = new THREE.PointLight(0xffcc88, 30, 5);
+mainLight.position.set(W/2, 2.45, D/2);
+mainLight.castShadow = true;
+mainLight.shadow.mapSize.set(1024, 1024);
+mainLight.shadow.camera.near = 0.1;
+mainLight.shadow.camera.far = 10;
+scene.add(mainLight);
+
+// 吊灯装饰
+const pendantGroup = new THREE.Group();
+const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.4, 8), new THREE.MeshStandardMaterial({ color: 0x1a1a1a }));
+cord.position.y = -0.2;
+pendantGroup.add(cord);
+const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.2, 20), new THREE.MeshStandardMaterial({ color: 0x2a2018, roughness: 0.5, metalness: 0.1 }));
+shade.position.y = -0.35;
+pendantGroup.add(shade);
+pendantGroup.position.set(W/2, 2.5, D/2);
+scene.add(pendantGroup);
+
+// ============ 装饰画（后墙，书桌上方）============
+const artFrame = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.65, 0.02), matBrass);
+artFrame.position.set(2.5, 1.75, D - 0.02);
+scene.add(artFrame);
+const art = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.59), new THREE.MeshStandardMaterial({ color: 0x4a3020, roughness: 0.6 }));
+art.position.set(2.5, 1.75, D - 0.025);
+scene.add(art);
+
+// ============ 粒子 ============
+const particles = new THREE.BufferGeometry();
+const pCount = 60;
+const pPos = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount; i++) {
+  pPos[i*3] = Math.random() * W;
+  pPos[i*3+1] = Math.random() * H;
+  pPos[i*3+2] = Math.random() * D;
+}
+particles.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const pMat = new THREE.PointsMaterial({ color: 0xffcc88, size: 0.007, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+const pSys = new THREE.Points(particles, pMat);
+scene.add(pSys);
+
 // ============ 踢脚线 ============
-const baseboard = new THREE.Mesh(new THREE.BoxGeometry(W, 0.08, 0.02), new THREE.MeshStandardMaterial({ color: 0x1a1008, roughness: 0.4 }));
-baseboard.position.set(W/2, 0.04, D - 0.01);
+const baseboard = new THREE.Mesh(new THREE.BoxGeometry(W - doorW, 0.06, 0.015), matDarkWood);
+baseboard.position.set(W/2, 0.03, D - 0.007);
 scene.add(baseboard);
 
-// ============ 黄铜开关面板 ============
-const switchPlate = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.01), new THREE.MeshStandardMaterial({ color: 0xb8960c, roughness: 0.2, metalness: 0.9 }));
-switchPlate.position.set(0.3, 1.3, D - 0.01);
-scene.add(switchPlate);
-
-// ============ 粒子 — 琥珀浮尘 ============
-const particles = new THREE.BufferGeometry();
-const count = 80;
-const positions = new Float32Array(count * 3);
-for (let i = 0; i < count; i++) {
-  positions[i*3] = Math.random() * W;
-  positions[i*3+1] = Math.random() * H;
-  positions[i*3+2] = Math.random() * D;
-}
-particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-const particleMat = new THREE.PointsMaterial({ color: 0xffcc88, size: 0.008, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
-const particleSystem = new THREE.Points(particles, particleMat);
-scene.add(particleSystem);
-
-// ============ 渲染循环 ============
+// ============ 渲染 ============
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
-  particleSystem.rotation.y += 0.0001;
+  pSys.rotation.y += 0.0001;
   renderer.render(scene, camera);
 }
 animate();
 
-// 响应 resize
 window.addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
 });
-
-console.log('🥃 威士忌洞穴已就绪 · 3.62m × 1.82m');
-console.log('   拖拽旋转 | 滚轮缩放 | 右键平移');
 </script>
 </body>
 </html>
